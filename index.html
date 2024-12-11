@@ -47,27 +47,16 @@
     </div>
 
     <div class="pagination">
-        <button class="page-btn" id="prev">Prev</button>
-        <div class="page-numbers">
-            <button class="page-btn" onclick=getProductByPagination(1)>1</button>
-            <button class="page-btn" onclick=getProductByPagination(2)>2</button>
-            <button class="page-btn" onclick=getProductByPagination(3)>3</button>
-
-            <!-- <button class="page-btn" onclick=getProductByPagination(4)>4</button>
-            <button class="page-btn" onclick=getProductByPagination(5)>5</button>
-            <button class="page-btn" onclick=getProductByPagination(6)>6</button>
-            <button class="page-btn" onclick=getProductByPagination(7)>7</button>
-            <button class="page-btn" onclick=getProductByPagination(8)>8</button> -->
-
-            <span>........</span>
-
-            <button class="page-btn" onclick=getProductByPagination(9)>9</button>
-            <button class="page-btn" onclick=getProductByPagination(10)>10</button>
+        <button class="page-btn" id="prev" onclick="updatePagination(-1)">Prev</button>
+        <div class="page-numbers" id="pageNumbers">
+          <button class="page-btn" id ="1" onclick="getProductByPagination(1)">1</button>
+          <button class="page-btn" id ="2" onclick="getProductByPagination(2)">2</button>
+          <span id="dots">........</span>
+          <button class="page-btn" id ="9" onclick="getProductByPagination(9)">9</button>
+          <button class="page-btn" id ="10" onclick="getProductByPagination(10)">10</button>
         </div>
-        <button class="page-btn" id="next">Next</button>
-    </div>
-
-
+        <button class="page-btn" id="next" onclick="updatePagination(1)">Next</button>
+      </div>
     <script src="index.js"></script>
 </body>
 </html>
