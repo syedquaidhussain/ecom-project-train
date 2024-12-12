@@ -19,8 +19,18 @@ img{
     border: 2px solid black;
 }
 
+.search-bar{
+    /* display: flex; */
+    padding: 20px;
+    /* justify-items: end; */
+    /* justify-content: center; */
+    
+}
+
 #second{
     border: 2px solid black;
+    max-height: calc(100vh -265px);
+    overflow: auto;
     
 }
 
@@ -69,6 +79,12 @@ svg{
     background-color: #d6d6d6;
     cursor: not-allowed;
 }
+
+.page-btn.active {
+  background-color: blue; /* or your preferred color */
+  color: white;
+}
+
 
 .page-numbers {
     display: flex;

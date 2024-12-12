@@ -16,7 +16,6 @@ function clearUI() {
     
 
 }
-// BUg =======================================================================querySelector lagna 
 function toggleCart(id,product) {
   const element = document.getElementById("cart"); // element is span
   console.log(id);
@@ -342,98 +341,128 @@ function highlightActive(button) {
 
 // New Way R To U ----------------------------------------------------------------
 
-async function getProductByPagination(btnVal) {
+// async function getProductByPagination(btnVal) {
 
-         const button = document.getElementById(`${btnVal}`);
+//          const button = document.getElementById(`${btnVal}`);
 
 
-         highlightActive(button);
+//          highlightActive(button);
           
-        //  console.log(button);
+//         //  console.log(button);
          
-        const skipValue = btnVal * 10;  // Assuming 10 products per page
+//         const skipValue = btnVal * 10;  // Assuming 10 products per page
 
-        const res = await fetch(`https://dummyjson.com/products?limit=10&skip=${skipValue}`);
+//         const res = await fetch(`https://dummyjson.com/products?limit=10&skip=${skipValue}`);
 
-        const data = await res.json(); 
+//         const data = await res.json(); 
 
-        const products= data.products;
+//         const products= data.products;
 
-        // console.log(data);  // Log the data to check the response
+//         // console.log(data);  // Log the data to check the response
 
-        const parentDiv= document.getElementById("second")
+//         const parentDiv= document.getElementById("second")
 
 
-        if(products){ //if on pagination new product exist then clear the ui 
-            while (parentDiv.firstChild) {
-                parentDiv.removeChild(parentDiv.firstChild);
-            }
-        }
+//         if(products){ //if on pagination new product exist then clear the ui 
+//             while (parentDiv.firstChild) {
+//                 parentDiv.removeChild(parentDiv.firstChild);
+//             }
+//         }
           
-        products.map(displayProductOnUi)
+//         products.map(displayProductOnUi)
        
 
-    };
+//     };
 
+
+async function getProductByPagination(pageNumber) {
+  // Set the active page number's color
+  const buttons = document.querySelectorAll('.page-btn');
+
+  
+  console.log(buttons);
+  
+  buttons.forEach(btn => btn.classList.remove('active')); // Remove the 'active' class from all
+
+  document.getElementById(pageNumber).classList.add('active'); // Add the 'active' class to the clicked button
+
+  const skipValue = (pageNumber - 1) * 10; // Assuming 10 products per page
+  const res = await fetch(`https://dummyjson.com/products?limit=10&skip=${skipValue}`);
+  const data = await res.json();
+  const products = data.products;
+
+  const parentDiv = document.getElementById("second");
+
+  if (products) {
+    // If products exist, clear the UI and display new products
+    while (parentDiv.firstChild) {
+      parentDiv.removeChild(parentDiv.firstChild);
+    }
+
+    products.map(displayProductOnUi); // Call the function to display the products
+  }
+}
 
     
     // Example of how to use the function
 
-let currentStart = 1; // Tracks the starting number of the first two buttons
-const maxPages = 10; // Total number of pages
-const visibleButtons = 2; // Number of buttons visible at a time
+// let currentStart = 1; // Tracks the starting number of the first two buttons
+// const maxPages = 10; // Total number of pages
+// const visibleButtons = 2; // Number of buttons visible at a time
 
 
-function updatePagination(direction) {
-  currentStart += direction * visibleButtons;
 
-  // Ensure numbers stay within valid ranges
-  if (currentStart < 1) {
-    currentStart = 1;
-  } else if (currentStart > maxPages - visibleButtons) {
-    currentStart = maxPages - visibleButtons + 1;
-  }
 
-  // Clear the existing page buttons except "dots" and other static elements
-  const pageNumbersDiv = document.getElementById("pageNumbers");
-  while (pageNumbersDiv.firstChild) {
-    pageNumbersDiv.removeChild(pageNumbersDiv.firstChild);
-  }
+// function updatePagination(direction) {
+//   currentStart += direction * visibleButtons;
 
-  // Create new page buttons dynamically
-  for (let i = 0; i < visibleButtons; i++) {
-    const newPageNumber = currentStart + i;
+//   // Ensure numbers stay within valid ranges
+//   if (currentStart < 1) {
+//     currentStart = 1;
+//   } else if (currentStart > maxPages - visibleButtons) {
+//     currentStart = maxPages - visibleButtons + 1;
+//   }
 
-    const button = document.createElement("button");
-    button.classList.add("page-btn");
-    button.textContent = newPageNumber;
-    button.setAttribute("onclick", `getProductByPagination(${newPageNumber})`);
-    pageNumbersDiv.appendChild(button);
-  }
+//   // Clear the existing page buttons except "dots" and other static elements
+//   const pageNumbersDiv = document.getElementById("pageNumbers");
+//   while (pageNumbersDiv.firstChild) {
+//     pageNumbersDiv.removeChild(pageNumbersDiv.firstChild);
+//   }
 
-  // Add the dots back
-  const dots = document.createElement("span");
-  dots.id = "dots";
-  dots.textContent = "........";
-  pageNumbersDiv.appendChild(dots);
+//   // Create new page buttons dynamically
+//   for (let i = 0; i < visibleButtons; i++) {
+//     const newPageNumber = currentStart + i;
 
-  // Adding the last two buttons dynamically
-  for (let i = maxPages - 1; i <= maxPages; i++) {
-    const button = document.createElement("button");
-    button.classList.add("page-btn");
-    button.textContent = i;
-    button.setAttribute("onclick", `getProductByPagination(${i})`);
-    button.id = i;
-    pageNumbersDiv.appendChild(button);
-  }
+//     const button = document.createElement("button");
+//     button.classList.add("page-btn");
+//     button.textContent = newPageNumber;
+//     button.setAttribute("onclick", `getProductByPagination(${newPageNumber})`);
+//     pageNumbersDiv.appendChild(button);
+//   }
 
-  // Enable/disable Prev and Next buttons
-  const prevButton = document.getElementById("prev");
-  const nextButton = document.getElementById("next");
+//   // Add the dots back
+//   const dots = document.createElement("span");
+//   dots.id = "dots";
+//   dots.textContent = "........";
+//   pageNumbersDiv.appendChild(dots);
 
-  prevButton.disabled = currentStart === 1;
-  nextButton.disabled = currentStart + visibleButtons - 1 >= maxPages;
-}
+//   // Adding the last two buttons dynamically
+//   for (let i = maxPages - 1; i <= maxPages; i++) {
+//     const button = document.createElement("button");
+//     button.classList.add("page-btn");
+//     button.textContent = i;
+//     button.setAttribute("onclick", `getProductByPagination(${i})`);
+//     button.id = i;
+//     pageNumbersDiv.appendChild(button);
+//   }
+
+//   // Enable/disable Prev and Next buttons
+//   const prevButton = document.getElementById("prev");
+//   const nextButton = document.getElementById("next");
+
+//   prevButton.disabled = currentStart === 1;
+//   nextButton.disabled = currentStart + visibleButtons - 1 >= maxPages;
+// }
 
 
 
@@ -465,6 +494,70 @@ function updatePagination(direction) {
 // searchProduct(event.target.value)
 
 // }
+
+let currentStart = 1; // The first visible page number
+const maxPages = 10;  // Total number of pages
+const visibleButtons = 2; // Number of buttons visible at a time
+function updatePagination(direction) {
+  // Update the current start page based on direction
+  currentStart += direction * visibleButtons;
+
+  // Ensure valid ranges for page numbers
+  if (currentStart < 1) {
+    currentStart = 1;
+  } else if (currentStart > maxPages - visibleButtons + 1) {
+    currentStart = maxPages - visibleButtons + 1;
+  }
+
+  // Clear current pagination buttons
+  const pageNumbersDiv = document.getElementById("pageNumbers");
+  while (pageNumbersDiv.firstChild) {
+    pageNumbersDiv.removeChild(pageNumbersDiv.firstChild);
+  }
+
+  // Create the page buttons dynamically
+  for (let i = 0; i < visibleButtons; i++) {
+    const pageNumber = currentStart + i;
+
+    const button = document.createElement("button");
+    button.classList.add("page-btn");
+    button.textContent = pageNumber;
+    button.id = `${pageNumber}`; // Assign ID to the button
+    button.setAttribute("onclick", `getProductByPagination(${pageNumber})`);
+    pageNumbersDiv.appendChild(button);
+  }
+
+  // Handle dots for pagination
+  const dots = document.createElement("span");
+  dots.id = "dots";
+  dots.textContent = "...";
+  pageNumbersDiv.appendChild(dots);
+
+  // Add the last page button
+  const lastPageButton = document.createElement("button");
+  lastPageButton.classList.add("page-btn");
+  lastPageButton.textContent = maxPages;
+  lastPageButton.setAttribute("onclick", `getProductByPagination(${maxPages})`);
+  pageNumbersDiv.appendChild(lastPageButton);
+
+  // Enable/Disable Prev and Next buttons
+  const prevButton = document.getElementById("prev");
+  const nextButton = document.getElementById("next");
+
+  if (prevButton) {
+    prevButton.disabled = currentStart === 1;
+  }
+  console.log("currentStart is", currentStart);
+  
+  if (nextButton) {
+    nextButton.disabled = currentStart + visibleButtons - 1 >= maxPages;
+  }
+}
+
+
+
+
+
 
 
 let debounceTimer;
