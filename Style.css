@@ -135,3 +135,11 @@ svg{
     border-radius: 50%;
   }
   
+  .pagination-container{
+    display: flex;
+    justify-content: space-between;
+  }
+  .offset{
+    margin-top: 20px;
+    margin-left: 20px;
+  }

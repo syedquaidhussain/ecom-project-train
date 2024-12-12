@@ -64,7 +64,15 @@
            
     </div>
 
-    <div class="pagination">
+
+    <!-- div for offset -> showing this out of this result  dynamically--> 
+     <div class = "pagination-container">
+
+       <div class = "offset">
+         
+      </div>
+      
+      <div class="pagination">
         <button class="page-btn" id="prev" onclick="updatePagination(-1)">Prev</button>
         <div class="page-numbers " id="pageNumbers">
           <button class="page-btn page-rep" id ="1" onclick="getProductByPagination(1)">1</button>
@@ -75,6 +83,7 @@
         </div>
         <button class="page-btn" id="next" onclick="updatePagination(1)">Next</button>
       </div>
+    </div>
     <script src="index.js"></script>
 </body>
 </html>
