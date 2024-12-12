@@ -31,6 +31,7 @@ img{
 svg{
     height: 40px;
     width: 40px;
+    margin: 20px;
 }
 .nav-icons{
     border: 2px solid black;
@@ -73,3 +74,48 @@ svg{
     display: flex;
     align-items: center;
 }
+
+.page-rep.active {
+    background-color: blue;
+    color: white;
+}
+
+/* cart and wishlist icon styling  */
+/* Container for icons */
+.icon-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Icon styling */
+  .icon {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+  }
+  
+  .wishlist-icon {
+    fill: red;
+  }
+  
+  .cart-icon {
+    fill: black;
+  }
+  
+  /* Counter styling */
+  .icon-counter {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: black;
+    color: white;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+  

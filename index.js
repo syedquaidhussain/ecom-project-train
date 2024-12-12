@@ -1,3 +1,40 @@
+let counterOfCart = 0;
+let counterOfWishList = localStorage.length;
+let cartStatus = false;
+let wishlistStatus = false;
+
+
+function clearUI() {
+
+  const parentDiv= document.getElementById("second")
+
+
+      while (parentDiv.firstChild) {
+          parentDiv.removeChild(parentDiv.firstChild);
+      
+  }
+    
+
+}
+// BUg =======================================================================querySelector lagna 
+function toggleCart(id) {
+  const e = document.getElementById(`${id}`)
+  if(!cartStatus){
+    e.textContent= "Remove From Cart"
+    cartStatus = true;
+  }
+  else{
+    e.textContent= "Add To Cart";
+    cartStatus= false;
+
+  }
+
+}
+
+function toggleWishList(id) {
+
+}
+
 // Find Can be optimsed 
 function displayProductOnUi(product){
 
@@ -16,12 +53,57 @@ function displayProductOnUi(product){
     const buttonAddToWish = document.createElement("button");
 
     buttonAdd.textContent="Add To Cart";
+    buttonAdd.classList.add("AddTC");
+    buttonAdd.id = product.id;
+    
+  
 
+    // Add To Cart Functionality
+    buttonAdd.addEventListener("click",(event)=>{
+      
+      console.log(event.target.id);
+      const element = document.getElementById("cart"); // element is span
+        
+      sessionStorage.length;
+      // element.innerHTML= ++counterOfCart;
+      sessionStorage.setItem(`${product.id}`,`${product}`)
+      element.innerHTML = sessionStorage.length ? sessionStorage.length:0
+      toggleCart(event.target.id);
+      
+    });
+    
     buttonAddToWish.textContent="Add To Wishlist";
+    
+    buttonAddToWish.id="AddTW";
+    
+    // Add To wishlist Functionality
+    buttonAddToWish.addEventListener("click",(event)=>{
+      
+      console.log(event.target.id);
+      const element = document.getElementById("wish");
+
+      if(localStorage.length){
+        counterOfWishList= localStorage.length
+
+        element.innerHTML = counterOfWishList;
+      }
+      localStorage.setItem(`${product.id}`,`${product}`)
+      element.innerHTML = localStorage.length ? localStorage.length:counterOfWishList
+      
+      // element.innerHTML= ++counterOfWishList;
+
+
+
+    
+      
+    })
 
     newDiv.appendChild(img);
+
     newDiv.appendChild(buttonAdd);
+    
     newDiv.appendChild(buttonAddToWish);
+
     const e =  document.getElementById("second")
     e.append(newDiv)
 
@@ -44,6 +126,7 @@ async function getProducts() {
      
      
 }
+
 getProducts();
     
 
@@ -55,7 +138,7 @@ async function categoryList(){
    const res =  await fetch('https://dummyjson.com/products/category-list')
 
    const data = await res.json();
-   console.log(data);
+  //  console.log(data);
    
 
    data.map((item)=>{
@@ -84,12 +167,12 @@ categoryList();
 async function getSelectedValue() {
 
     const element =  document.getElementById("categories")
-    console.log(element.value);
+    // console.log(element.value);
 
     const res = await fetch(`https://dummyjson.com/products/category/${element.value}`)
   const data = await res.json();
   const product = data.products
-    console.log(product);
+    // console.log(product);
   
     // clearing the previous products in ui 
     const parentDiv= document.getElementById("second")
@@ -108,8 +191,17 @@ async function getSelectedValue() {
 
 }
 
+// To change the color of selected button on pagination 
+function highlightActive(button) {
+  // Remove 'active' class from all buttons
+  const buttons = document.querySelectorAll('.page-rep');
+  // console.log(buttons);
+  
+  buttons.forEach(btn => btn.classList.remove('active'));
 
-
+  // Add 'active' class to the clicked button
+  button.classList.add('active');
+}
 
 
 // New Way R To U ----------------------------------------------------------------
@@ -117,11 +209,11 @@ async function getSelectedValue() {
 async function getProductByPagination(btnVal) {
 
          const button = document.getElementById(`${btnVal}`);
-        const settingValue = button.disabled ? false:true
-         button.setAttribute ("disabled", true);
 
-         
-         console.log(button);
+
+         highlightActive(button);
+          
+        //  console.log(button);
          
         const skipValue = btnVal * 10;  // Assuming 10 products per page
 
@@ -131,7 +223,7 @@ async function getProductByPagination(btnVal) {
 
         const products= data.products;
 
-        console.log(data);  // Log the data to check the response
+        // console.log(data);  // Log the data to check the response
 
         const parentDiv= document.getElementById("second")
 
@@ -154,6 +246,7 @@ async function getProductByPagination(btnVal) {
 let currentStart = 1; // Tracks the starting number of the first two buttons
 const maxPages = 10; // Total number of pages
 const visibleButtons = 2; // Number of buttons visible at a time
+
 
 function updatePagination(direction) {
   currentStart += direction * visibleButtons;
@@ -204,4 +297,70 @@ function updatePagination(direction) {
 
   prevButton.disabled = currentStart === 1;
   nextButton.disabled = currentStart + visibleButtons - 1 >= maxPages;
+}
+
+
+
+
+
+//Searching Feature 
+
+//  function debounceFunction(inputValue,delay){
+//   console.log(inputValue);
+  
+//      let timer = null;
+//   return async (inputValue)=>{
+
+//        if(timer) clearTimeout(timer);
+//       timer =  setTimeout(async() => {
+      
+//       const res = await fetch(`https://dummyjson.com/products/search?q=${inputValue}`);
+//       const data = res.json();
+//       console.log("fetching",data);
+//     }, delay);
+//   }
+  
+
+// }
+
+// const  searchProduct = debounceFunction(event.target.value,2000)
+
+// function fetchSearchResults(event) {
+// searchProduct(event.target.value)
+
+// }
+
+
+let debounceTimer;
+
+function searchProduct(event) {
+  const inputValue = event.target.value.trim();
+console.log(inputValue);
+
+  // Clear the previous timer
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+
+  // Set a new timer
+  debounceTimer = setTimeout(async () => {
+    console.log("Searching for:", inputValue);
+
+    try {
+      const res = await fetch(`https://dummyjson.com/products/search?q=${inputValue}`);
+      const data = await res.json();
+      const products = data.products;
+      console.log("Fetched data:", data);
+
+ 
+       if(products) {
+        clearUI();
+       products.map(displayProductOnUi);
+
+       }
+    } 
+    catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  }, 500); // Delay of 2 seconds
 }
