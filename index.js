@@ -18,20 +18,117 @@ function clearUI() {
 }
 // BUg =======================================================================querySelector lagna 
 function toggleCart(id) {
-  const e = document.getElementById(`${id}`)
-  if(!cartStatus){
-    e.textContent= "Remove From Cart"
-    cartStatus = true;
+  const oldElement = document.getElementById(`${id}`)
+  console.log(oldElement);
+  
+  const newbuttonAdd = document.createElement("button");
+  newbuttonAdd.classList.add("RemoveTC");
+  newbuttonAdd.id=id;
+
+// Find can be optimsed listener function alag bhi bana  sakte h
+  newbuttonAdd.addEventListener("click",(event)=>{
+      
+    console.log(event.target.id);
+    console.log(event);
+    const element = document.getElementById("cart"); // element is span
+      
+    // sessionStorage.length;
+    // element.innerHTML= ++counterOfCart;
+    sessionStorage.removeItem(`${id}`)
+
+    element.innerHTML = sessionStorage.length ? sessionStorage.length:0
+    toggleCart(event.target.id);
+    
+  });
+
+
+  if (oldElement.innerText === "Add To Cart") {
+    console.log("inisdee");
+    
+    newbuttonAdd.textContent = "Remove From Cart"
+  
+      
+    oldElement.replaceWith(newbuttonAdd);
+    // oldElement.remove();
+      
+      cartStatus = true;
+      
+    
   }
-  else{
-    e.textContent= "Add To Cart";
+    else{
+      newbuttonAdd.textContent = "Add To Cart"
+
+    oldElement.replaceWith(newbuttonAdd);
+    // e.textContent= "Add To Cart";
     cartStatus= false;
 
   }
 
 }
 
+
 function toggleWishList(id) {
+  
+  console.log(id);
+  
+  // same code as wishlist 
+
+  const oldElement = document.querySelector(`#${id}.AddTW`);
+  console.log(oldElement);
+
+  
+  const newbuttonAdd = document.createElement("button");
+  newbuttonAdd.classList.add("AddTW");
+  // newbuttonAdd.setAttribute("data-type","wishlist")
+  newbuttonAdd.id=`btn-${id}`;
+
+// Find can be optimsed listener function alag bhi bana  sakte h
+  newbuttonAdd.addEventListener("click",(event)=>{
+      
+    console.log(event.target.id);
+    // console.log(event);
+    const element = document.getElementById("wish"); // element is span
+      
+    // sessionStorage.length;
+    // element.innerHTML= ++counterOfCart;
+ 
+    // localStorage.removeItem(`${id}`)
+    
+    element.innerHTML = localStorage.length ? sessionStorage.length:0;
+    
+    toggleWishList(event.target.id);
+    
+  });
+  
+  
+  if (oldElement.innerText.trim() === "Add To WishList") {
+    console.log("inisdee");
+    
+    newbuttonAdd.textContent = "Remove From WishList"
+
+    
+    // localStorage.setItem(`${product.id}`,`${product}`)
+
+    oldElement.replaceWith(newbuttonAdd);
+    // localStorage.setItem(`${product.id}`,`${product}`)
+    // element.innerHTML = localStorage.length;
+    // oldElement.remove();
+    
+    cartStatus = true; /////////////////not in use 
+    
+    
+  }
+  else{
+      // localStorage.removeItem(`${id}`)
+      newbuttonAdd.textContent = "Add To WishList"
+
+    oldElement.replaceWith(newbuttonAdd);
+    // localStorage.removeItem(`${product.id}`)
+    // element.innerHTML = localStorage.length;
+    // e.textContent= "Add To Cart";
+    cartStatus= false; //////////////////////not in use 
+
+  }
 
 }
 
@@ -40,7 +137,8 @@ function displayProductOnUi(product){
 
     const newDiv = document.createElement("div");
 
-    newDiv.id = `${product.id}`;
+    // newDiv.id = `${product.id}`;  -----------------------div and button inside div has same id 
+
     newDiv.className = "image-class";
     
     const img = document.createElement("img");
@@ -54,49 +152,74 @@ function displayProductOnUi(product){
 
     buttonAdd.textContent="Add To Cart";
     buttonAdd.classList.add("AddTC");
-    buttonAdd.id = product.id;
-    
+    buttonAdd.id = `btn-${product.id}` ////////////////////////////////////
+      
   
 
     // Add To Cart Functionality
     buttonAdd.addEventListener("click",(event)=>{
       
       console.log(event.target.id);
+      console.log(event);
       const element = document.getElementById("cart"); // element is span
         
-      sessionStorage.length;
+      // sessionStorage.length;
       // element.innerHTML= ++counterOfCart;
       sessionStorage.setItem(`${product.id}`,`${product}`)
       element.innerHTML = sessionStorage.length ? sessionStorage.length:0
       toggleCart(event.target.id);
       
     });
+
+
+    // Add To WishList
+    buttonAddToWish.textContent="Add To WishList";
+    buttonAddToWish.classList.add("AddTW");
+    // buttonAddToWish.setAttribute("data-type","wishlist")
+
+
+        buttonAddToWish.id=`btn-${product.id}`;  //card button and wish list button has same id 
+
+      console.log(buttonAddToWish);
     
-    buttonAddToWish.textContent="Add To Wishlist";
-    
-    buttonAddToWish.id="AddTW";
     
     // Add To wishlist Functionality
     buttonAddToWish.addEventListener("click",(event)=>{
       
       console.log(event.target.id);
-      const element = document.getElementById("wish");
+      const element = document.getElementById("wish"); //wish span 
 
-      if(localStorage.length){
-        counterOfWishList= localStorage.length
+      // if(localStorage.length){
+      //   counterOfWishList= localStorage.length
 
-        element.innerHTML = counterOfWishList;
-      }
-      localStorage.setItem(`${product.id}`,`${product}`)
-      element.innerHTML = localStorage.length ? localStorage.length:counterOfWishList
+      //   // element.innerHTML = counterOfWishList;
+      // }
+      console.log("enet is is ",event.target.id);
       
-      // element.innerHTML= ++counterOfWishList;
+      const currentButton = document.querySelector(`#${event.target.id}.AddTW`)
+      console.log("current",currentButton);
+      
+      if(currentButton.innerHTML==="Add To WishList"){
+
+        localStorage.setItem(`${product.id}`,`${product}`)
+        element.innerHTML = localStorage.length;
+      }
+      else{
+        localStorage.removeItem(`${product.id}`)
+        element.innerHTML = localStorage.length;
+      }
+
+      // element.innerHTML = localStorage.length ? localStorage.length:counterOfWishList
+
+      toggleWishList(event.target.id)
+      
+ 
+    })
 
 
 
     
       
-    })
 
     newDiv.appendChild(img);
 
