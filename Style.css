@@ -171,13 +171,15 @@ svg{
   }
 
 
-  #nav-icons-container{
-    padding-top: 9%;
-    padding-left: 7%;
+  #nav-icons-container{   /*-----------------------------*/
+    /* padding-top: 9%; */
+    /* padding-left: 7%; */
+    margin: 2%;
   }
 
   .image-class{
-    display: flex;
+    /* display: flex; */ /*------------------------*/
+    /* margin-top: 2%; */
     justify-content: center;
     padding-left: 35px;
   }
@@ -196,3 +198,56 @@ svg{
   .offset.hidden {
     visibility: hidden;
   }
+
+  .product-images{
+    margin-top: 2%;
+  }
+
+
+  .dropdown {
+    position: absolute;
+    top: 50px; /* Adjust based on icon position */
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+  
+  .dropdown ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+  }
+  
+  .dropdown ul li {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .dropdown ul li:last-child {
+    border-bottom: none;
+  }
+  
+  .hidden {
+    display: none;
+  }
+
+ .cart-wishlist-container{
+
+   display: flex;
+   
+   justify-content: end;
+   margin-right: 15%;
+   margin-top: 10px;
+   
+   
+  }
+
+  
+
+  
