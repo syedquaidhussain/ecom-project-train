@@ -4,7 +4,9 @@ let cartStatus = false;
 let wishlistStatus = false;
 let cartItems = []; // contains  complete product object {id,title,....}
 let wishlistItems = []; // contains  complete product object{id:,title,....}
+let productsByCategory = []; //stores all products when user click on specific category
 
+let mapOfItemsInfiniteScrolling = new Map();
 
 window.onload =async () => {
   const prev = document.getElementById("prev")
@@ -12,8 +14,6 @@ window.onload =async () => {
 //  getAllItemFromCart();
 //  getAllItemFromWishList();
 };
-
-
 
 function getAllItemFromCart() {
 
@@ -70,13 +70,6 @@ function getAllItemFromWishList() {
      
     }
    }    
-
-
-
-   
-
-
-
 }
 
 
@@ -164,11 +157,6 @@ function toggleDropdown(dropdownClass, items, listId) {
 }
 
 
-
-
-
-
-
 function clearUI() {
 
   const parentDiv= document.getElementById("second")
@@ -181,8 +169,6 @@ function clearUI() {
     
 
 }
-
-
 
 function toggleCart(id,product) {
   const element = document.getElementById("cart"); // element is span
@@ -308,13 +294,13 @@ if(oldElement) {
 }
 
 // Find Can be optimsed 
-function displayProductOnUi(product)   {
+function displayProductOnUi(product,direction=0)   {
 
     const newDiv = document.createElement("div");
     const titleDiv = document.createElement('div');
 
 // Add the p element using innerHTML
-  titleDiv.innerHTML = `<p>${product.title}</p>`;
+  titleDiv.innerHTML = `<p>${product.title} and id is ${product.id}</p>`;
 
 
     // newDiv.id = `${product.id}`;  -----------------------div and button inside div has same id 
@@ -386,8 +372,32 @@ function displayProductOnUi(product)   {
     
     newDiv.appendChild(iconsDiv);
 
-    const e =  document.getElementById("second")
-    e.append(newDiv)
+    const e =  document.getElementById("second");
+
+    if(direction===-1) {
+      // console.log("scrollHe",e.scrollHeight);
+      
+      const previousScrollHeight = e.scrollTop; // Store current scroll height
+      //  console.log("prevScrollH",previousScrollHeight);
+      
+    e.insertAdjacentElement("afterbegin",newDiv)
+      //  console.log("AfterScrollH",e.scrollHeight);
+       
+    e.scrollTop =  e.scrollHeight -previousScrollHeight +300;
+
+    console.log(e.scrollTop);
+    
+    }
+
+    else{
+      
+
+      e.append(newDiv);
+
+      console.log("scrollTop is ", e.scrollTop);
+      
+
+    }
 
 }
 
@@ -454,29 +464,19 @@ async function getSelectedValue() {
     const res = await fetch(`https://dummyjson.com/products/category/${element.value}`)
   const data = await res.json();
   const product = data.products
-    // console.log(product);
-  
-    // clearing the previous products in ui 
-    const parentDiv= document.getElementById("second")
+   
+   productsByCategory = product; ////////////
+    // console.log(data.total);
+   
 
-     if(product){
-
-         // Find Alternative 
-         while (parentDiv.firstChild) {
-            parentDiv.removeChild(parentDiv.firstChild);
-        }
-     }
-
-    product.map(displayProductOnUi)
     getAllItemFromCart();
     getAllItemFromWishList();
+    // offset(0,1,data.total)
       
-
+    // newPaginationMaker(productsByCategory.length)
+  getProductByCategoryPagination(1);
 
 }
-
-
-
 
 
 function dotMakerPagination() {
@@ -528,7 +528,7 @@ async function updatePagination(direction,flag) {
 
      
     const activeButton = document.querySelector("button.active");
-     console.log(activeButton);
+    //  console.log(activeButton);
      
    console.log("Active button is ", activeButton);
 
@@ -542,9 +542,9 @@ async function updatePagination(direction,flag) {
   // Trigger API call for the current page
   if(flag===1 && direction===1){ 
   
-   console.log(activeButton.id); 
+  //  console.log(activeButton.id); 
    if(Number(activeButton.id)===9)  {
-    console.log("dekhte h ");
+    // console.log("dekhte h ");
     
     nextButton.disabled = true;
     // await getProductByPagination(activeButton.id+1);
@@ -563,7 +563,7 @@ async function updatePagination(direction,flag) {
   else if(flag===1 && direction===-1) {
 
     if(Number(activeButton.id)===2 )  {
-        console.log("dekhte h ");
+        // console.log("dekhte h ");
         
       prevButton.disabled= true;
       // await getProductByPagination(activeButton.id-1);
@@ -580,8 +580,6 @@ async function updatePagination(direction,flag) {
 
 }
 
-
-
 // Function to highlight the active button
 function highlightActive(pageNumber) {
   // Remove 'active' class from all buttons
@@ -590,7 +588,7 @@ function highlightActive(pageNumber) {
 
   // Add 'active' class to the clicked button
   const activeButton = document.getElementById(pageNumber);
-  console.log("In active",activeButton);
+  // console.log("In active",activeButton);
   
   if (activeButton) {
     activeButton.classList.add('active');
@@ -600,7 +598,7 @@ function highlightActive(pageNumber) {
 
 function clearPrevPagination() {
   const pageNumbersDiv = document.getElementById("pageNumbers");
-  console.log(pageNumbersDiv);
+  // console.log(pageNumbersDiv);
   
   while (pageNumbersDiv.firstChild) {
     pageNumbersDiv.removeChild(pageNumbersDiv.firstChild);
@@ -609,10 +607,10 @@ function clearPrevPagination() {
 }
 
 // Function to fetch products based on the page number
-async function getProductByPagination(pageNumber , fromOnLoadEvent = 0) {
+async function getProductByPagination(pageNumber , fromOnLoadEvent = 0, fromInfiniteScrolling=0, scrollingDirection=0) {
    
     highlightActive(pageNumber); 
-    const prevButton= document.getElementById("prev")
+  const prevButton= document.getElementById("prev")
 
   const skipValue = (pageNumber - 1) * 10; // Assuming 10 products per page
 
@@ -622,24 +620,36 @@ async function getProductByPagination(pageNumber , fromOnLoadEvent = 0) {
 
   const products = data.products;
 
+  
 
+if(fromInfiniteScrolling===1 && scrollingDirection ===1) {
+  products.map((product)=>displayProductOnUi(product,1))
+}
+else if(fromInfiniteScrolling===1 && scrollingDirection ===-1) {
+  const reverseProductArray = products.reverse();
+  reverseProductArray.map((product)=>displayProductOnUi(product,-1))
 
+}
 
-// logic for displaying the products on UI
+else{
+
   const parentDiv = document.getElementById("second");
-
+  
   if (products) {
-
+    
     // Clear previous products
     while (parentDiv.firstChild) {
       parentDiv.removeChild(parentDiv.firstChild);
     }
-
+    
     // Display new products
-   await products.map(displayProductOnUi);
+    await products.map(displayProductOnUi);
+  }
   }
   
-
+// }
+ 
+    //pagination changing logic
   // Here fromOnLoadEvent because when window is loading then page =1 so that below code dont run for first time.
   //  when user click 
   // on 2 or 3 then click on 1 then it should run.
@@ -758,17 +768,12 @@ else{
    
       pageNumbersDiv.appendChild(lastButtonMakerPagination()); 
 
-      console.log("Last Button");
+      // console.log("Last Button");
       console.log(pageNumber);
+      highlightActive(pageNumber); 
+
       
-      
-      highlightActive(pageNumber);
-
-
-
 }
-
-
 
    // Rendering Updated Pagination. 
 else if(pageNumber!==1 && pageNumber<5) {
@@ -781,9 +786,7 @@ else if(pageNumber!==1 && pageNumber<5) {
  
   clearPrevPagination()
   
-  
-  
-  // Adding 1 harded coded. 
+   // Adding 1 harded coded. 
 
   pageNumbersDiv.appendChild(oneMakerPagination());
  
@@ -841,24 +844,207 @@ else if(pageNumber!==1 && pageNumber<5) {
 offset(skipValue);
 
 // if(pageNumber===1  && fromOnLoadEvent===1) {
-  console.log("hello duniya");
+  // console.log("hello duniya");
   
   getAllItemFromCart();
   getAllItemFromWishList()
 
+}
 
-// toggleCart()
-// getAllItemFromCart()
-// getAllItemFromWishList()
+let count=0;
 
+ async function getProductByCategoryPagination(pageNumber) {
+
+  offset( (pageNumber-1)*10,1,productsByCategory.length,pageNumber);
+
+  // In this there is not any api call
+  // let productsByCategory = []; //stores all products when user click on specific category
+  highlightActive(pageNumber);
+  // const ac
+  // const activeButton = document.querySelector("button.active");
+
+  const nextButton = document.getElementById("next");
+  const prevButton = document.getElementById("prev");
+  if(pageNumber=== Math.ceil(((productsByCategory.length))/10) )
+    {
+     nextButton.disabled=true;
+    }
+    else{
+      nextButton.disabled=false;
+    }
+    if(pageNumber===1)
+    {
+      prevButton.disabled= true
+    }
+    else{
+      prevButton.disabled=false;
+    }
+
+
+
+  clearUI()
+
+  //optimisible
+if( productsByCategory.length>10 && (productsByCategory.length)%10 === 0 ) {
+  // console.log("true");
+   
+  clearUI();
  
+  for(let i = (pageNumber-1)*10;i<= (pageNumber*10)-1;i++) {
+
+    // console.log("Indide loop")
+    // console.log(productsByCategory[i])
+     
+     
+
+      displayProductOnUi(productsByCategory[i]);
+      // offset()
+  }
+}
+
+
+//for 24 ,25  products etc cases
+else if(productsByCategory.length>10 && (productsByCategory.length)%10 !== 0 ){
+    //  clearUI();
+   
+
+     if(productsByCategory.length-count<10) {
+
+      for(let i=count; i<= productsByCategory.length-1;i++) {
+      displayProductOnUi(productsByCategory[i])
+      }
+
+      count=0;
+
+     }
+
+     else{
+      for(let i = (pageNumber-1)*10;i<= (pageNumber*10)-1;i++) {
+         
+         if(count>=productsByCategory.length){
+           break;
+          }
+    // console.log("Indide loop")
+    // console.log(productsByCategory[i])
+    
+    
+    count++;
+    displayProductOnUi(productsByCategory[i]);
+    // offset()
+  }
+}
+}
+else{
+  for(let i=count; i<= productsByCategory.length-1;i++) {
+    displayProductOnUi(productsByCategory[i])
+    }
 
 }
 
-// Function to update the offset display
-function offset(skipValue) {
+highlightActive(pageNumber);
+
+
+// offset( (pageNumber-1)*10,1,productsByCategory.length,pageNumber);
+
+}
+
+
+function updatePaginationInCategory(direction) {
+  const activeButton = document.querySelector("button.active");
+  
+  if(direction===1) { //next is clicked
+ 
+ getProductByCategoryPagination(Number(activeButton.id)+1);
+
+//  console.log(Math.ceil(((productsByCategory.length))/10));
+//  console.log()
+  if(Number(activeButton.id)+1 === Math.ceil(((productsByCategory.length))/10) )
+  {
+   const nextButton = document.getElementById("next");
+   nextButton.disabled=true;
+  }
+
+
+}
+else{
+
+  getProductByCategoryPagination(Number(activeButton.id)-1);
+
+  // console.log(Math.ceil((productsByCategory.length))/10);
+  // console.log()
+   if(Number(activeButton.id)-1 === 1 )
+   {
+    const prevButton = document.getElementById("prev");
+    prevButton.disabled=true;
+   }
+}
+
+
+}
+
+function newPaginationMaker(totalPages,pageNumber) {
+ 
+  const pageNumbersDiv = document.getElementById("pageNumbers");
+  
+   const pagination = document.querySelector(".pagination");
+   const prev = document.createElement('button');
+   prev.classList.add("page-btn");
+
+  prev.id="prev";
+  prev.textContent="Prev"
+
+  prev.setAttribute("onclick", "updatePaginationInCategory(-1)");
+
+  pagination.replaceChild(prev,pagination.firstElementChild);
+
+   const next = document.createElement('button');
+   next.classList.add("page-btn");
+
+  next.id="next";
+  next.textContent="Next";
+
+  next.setAttribute("onclick", "updatePaginationInCategory(1)");
+
+  pagination.replaceChild(next,pagination.lastElementChild)
+
+  //  clear Previous pagination
+  pageNumbersDiv.innerHTML='';
+   for(let i=1;i<=Math.ceil(totalPages/10);i++) {
+    const button = document.createElement("button");
+    button.classList.add("page-btn");
+    button.classList.add("page-rep");
+    button.textContent = i;
+    button.id = i;
+    button.setAttribute("onclick", `getProductByCategoryPagination(${i})`);
+    pageNumbersDiv.append(button)
+
+  }
+  highlightActive(pageNumber)
+
+
+}
+
+// Function to update the offset display //totalProduct is needed onky when getSelectedValue is called
+function offset(skipValue, fromgetSelectedValue=0,totalProduct=0,pageNumber) {
+  // console.log("skip Value is ",skipValue)
   const newPara = document.createElement("p");
-  newPara.textContent = `Showing ${skipValue + 1} to ${skipValue + 10} out of 100 results`;
+  if(fromgetSelectedValue===1) {
+    let productOnOnePage;
+    if((totalProduct-skipValue)%10!==0 && pageNumber===Math.ceil(totalProduct/10)) {
+       productOnOnePage = totalProduct;
+    }
+    else{
+
+      productOnOnePage = totalProduct<10  ? totalProduct:(skipValue+10);
+    }
+
+    newPara.textContent = `Showing ${skipValue + 1} to ${productOnOnePage} out of ${totalProduct} results`;
+       newPaginationMaker(totalProduct,pageNumber);
+  }
+  else{
+
+    newPara.textContent = `Showing ${skipValue + 1} to ${skipValue + 10} out of 100 results`;
+  }
 
   const offsetElement = document.querySelector(".offset");
 
@@ -869,11 +1055,6 @@ function offset(skipValue) {
 }
 
 // Load the first page on window load
-
-
-
-
-
 
 let debounceTimer;
 
@@ -912,8 +1093,6 @@ function searchProduct(event) {
   },400); 
 }
 
-
-
 let pageCount=0;
 let limit=0;
 
@@ -925,7 +1104,7 @@ let limit=0;
  const e =  document.getElementById(pageCount) ;
 
  let flag =0;
- console.log("inside infinite",e);
+//  console.log("inside infinite",e);
  
  
  // Make sure the scroll event listener is inside the function and is properly added
@@ -936,26 +1115,24 @@ let limit=0;
   // to toggle the visibilty of offset
    const offsetDiv = document.querySelector('.offset')
    const { scrollTop, clientHeight, scrollHeight } = element;
-    
-  //     console.log("scrollTop", scrollTop);
-  //  console.log("clientHeight", clientHeight);
-  //  console.log("scrollHeight", scrollHeight);
-
    // Check if the scroll position is near the bottom to trigger loading new content
    if (scrollTop + clientHeight >= scrollHeight ) {
      console.log("Scrolled to bottom, loading more products...");
 
       
-     console.log(activeButton);
-     console.log(activeButton.id);
+    //  console.log(activeButton);
+    //  console.log(activeButton.id);
      
-     if(Number(activeButton.id)<=10)
+     if(Number(activeButton.id)<10)
       { 
-         pageCount++;
-        limit++;
+           pageCount++;
+           limit++;
         //  getProducts(limit,pageCount);
+
           // updatePagination(1,flag);
-          // getProductByPagination(Number(activeButton.id)+1);
+   
+
+          getProductByPagination(Number(activeButton.id)+1, 0, 1,1);
          
         }
         
@@ -963,7 +1140,7 @@ let limit=0;
       
       if(scrollTop===0 && Number(activeButton.id)!==1){
         
-        //  getProductByPagination(Number(activeButton.id)-1);
+         getProductByPagination(Number(activeButton.id)-1,0,1,-1) ;
        
     }
   });
@@ -977,17 +1154,5 @@ infiniteScrolling();
 
 
 
-
-
-// //  fetching cart items []
-
-// for(let i=0;i<sessionStorage.length;i++) {
-
-//   const key = sessionStorage.key(i);
-//   console.log(key);
-  
-//   const value = JSON.parse(sessionStorage.getItem(key));
-//   console.log(value);
-// }
 
 
