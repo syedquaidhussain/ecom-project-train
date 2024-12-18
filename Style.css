@@ -1,6 +1,6 @@
-html{
+/* html{
   overflow: hidden;
-}
+} */
 
 
 #first{
@@ -16,13 +16,13 @@ input{
     
 }
 
-img{
+/* img{
     
     height: 50%;
     width: 20%;
     
     border: 2px solid black;
-}
+} */
 
 .search-bar{
     display: flex;
@@ -33,16 +33,16 @@ img{
     
 }
 
-#second{
+/* #second{
 
-    border: 4px solid #eb4762;
+    border: 4px solid #ff6347;
     max-height: calc(100vh - 280px);
     min-height: calc(100vh - 280px);
     overflow: auto;
     width: 60%;
     margin-left: 17%;
       
-}
+} */
 
 .image-class {
     border: 2px solid black;
@@ -226,6 +226,7 @@ svg{
   
   .dropdown ul li {
     padding: 10px;
+    color: black ;
     border-bottom: 1px solid #f0f0f0;
   }
   

@@ -12,19 +12,37 @@
   <body>
     <header class="header">
       <h1>Shop With Style</h1>
+      <input type="search-item" name="searched-item" id="input-product" oninput="searchProduct(event)">
+
       <div class="header-icons">
           <div class="icon-container">
-              <img src="cart.svg" alt="Cart" class="icon">
-              <span class="icon-badge" id="cart-count">0</span>
+              <!-- <img src="cart.svg" alt="Cart" class="icon"> -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon cart-icon" viewBox="0 0 24 24">
+                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.84 14h8.91l.82-4H6.16l1.68 4zm-1.28-5h11.27l-1.8 9H6.2l-1.65-7.93L2 6H0V4h2l3.6 7.59L5.52 15h11.94l1.52-7H5.7l-.3-1z" />
+              </svg>
+              <!-- <span class="icon-badge" id="cart-count">0</span> -->
+              <span id="cart" class="icon-counter">0</span>
+              <div class="dropdown cart-dropdown hidden">
+                <ul id="cart-products"></ul>
+              </div>
+
           </div>
           <div class="icon-container">
-              <img src="wishlist.svg" alt="Wishlist" class="icon">
-              <span class="icon-badge" id="wishlist-count">0</span>
+              <!-- <img src="wishlist.svg" alt="Wishlist" class="icon"> -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon wishlist-icon" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+              <span id="wish" class="icon-counter">0</span>
+              <div class="dropdown wishlist-dropdown hidden">
+                <ul id="wishlist-products"></ul>
+              </div>
+
+              <!-- <span class="icon-badge" id="wishlist-count">0</span> -->
           </div>
       </div>
   </header>
     
-    <div class="div" id = "first">
+  
 
         <!-- <div class ="nav-icons"> -->
 
@@ -60,38 +78,10 @@
 
 
        <!-- Wishlist Icon -->
-        <div class ="cart-wishlist-container">
-
-          
-          <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon wishlist-icon" viewBox="0 0 24 24">
-    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-  </svg>
-  
-  <span id="wish" class="icon-counter">0</span>
-  <!-- Dropdown List -->
-  <div class="dropdown wishlist-dropdown hidden">
-    <ul id="wishlist-products"></ul>
-  </div>
-</div>
-
-<!-- Cart Icon -->
-<div class="icon-container">
-  <svg xmlns="http://www.w3.org/2000/svg" class="icon cart-icon" viewBox="0 0 24 24">
-    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.84 14h8.91l.82-4H6.16l1.68 4zm-1.28-5h11.27l-1.8 9H6.2l-1.65-7.93L2 6H0V4h2l3.6 7.59L5.52 15h11.94l1.52-7H5.7l-.3-1z" />
-  </svg>
-  <span id="cart" class="icon-counter">0</span>
-  <!-- Dropdown List -->
-  <div class="dropdown cart-dropdown hidden">
-    <ul id="cart-products"></ul>
-  </div>
-</div>
-
-      
-</div>
+ 
     <!-- </div> -->
     
-           <div class="search-bar"> 
+           <!-- <div class="search-bar"> 
           
           <div>
 
@@ -99,7 +89,7 @@
             <span>Search</span>
             <input type="search-item" name="searched-item" id="input-product" oninput="searchProduct(event)">
             
-          </div>
+          </div> -->
 
         <div id ="categories-list">
 
@@ -117,9 +107,9 @@
 
 
         <!-- containing products dynamically -->
-        <div class="div" id="second">
-           
-    </div>
+        <main class="product-container" id="second">
+          <!-- Products will load dynamically here -->
+      </main>
 
 
     <!-- div for offset -> showing this out of this result  dynamically--> 

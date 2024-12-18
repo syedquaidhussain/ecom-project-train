@@ -292,115 +292,213 @@ if(oldElement) {
   
 }
 }
+function displayProductOnUi(product,direction=0) {
+  const productContainer = document.getElementById("second");
 
-// Find Can be optimsed 
-function displayProductOnUi(product,direction=0)   {
+  const productCard = document.createElement("div");
+  productCard.classList.add("product-card");
+  productCard.id = product.id*10; //clash was taking place with pagination button id that's why multiple of 10
 
-    const newDiv = document.createElement("div");
-    const titleDiv = document.createElement('div');
+  // Create HTML structure
+  productCard.innerHTML = `
+      <img src="${product.thumbnail}" alt="${product.title}" class="product-image">
+      <div class="product-info">
+          <h3>${product.title } and Id is ${product.id}</h3>
+       
+          <div class="button-group">
+              <button id="btn-${product.id}" class="add-cart AddTC">Add To Cart</button>
+              <button id="btn-${product.id}" class="add-wishlist AddTW">Add To WishList</button>
+          </div>
+      </div>
+  `;
 
-// Add the p element using innerHTML
-  titleDiv.innerHTML = `<p>${product.title} and id is ${product.id}</p>`;
+  // Get the buttons by class name
+  const addCartButton = productCard.querySelector(".add-cart");
+  const addWishlistButton = productCard.querySelector(".add-wishlist");
+
+  // Add event listeners dynamically
+  addCartButton.addEventListener("click", (event) =>{
+    toggleCart(event.target.id,product);
+  });
+
+  addWishlistButton.addEventListener("click", (event) =>{
+    toggleWishList(event.target.id,product);
+
+  });
+
+  // Append the product card to the container
+  productContainer.appendChild(productCard);
+
+          
 
 
-    // newDiv.id = `${product.id}`;  -----------------------div and button inside div has same id 
+      // Add event listeners for buttons
+      // const addCartButton = productCard.querySelector(".add-cart");
+      // const addWishlistButton = productCard.querySelector(".add-wishlist");
 
-    newDiv.className = "image-class";
-    
-    const img = document.createElement("img");
-    
-    img.src= product.thumbnail
-    img.width = 150; // Set width (optional)
-    img.height = 150;
-    img.classList.add("product-images")
+      // addCartButton.addEventListener("click", () => {
+      //     cart++;
+      //     cartCount.textContent = cart;
+      // });
 
-    
-    const iconsDiv = document.createElement("div");
-    iconsDiv.id = "nav-icons-container"
+      // addWishlistButton.addEventListener("click", () => {
+      //     wishlist++;
+      //     wishlistCount.textContent = wishlist;
+      // });
 
-    const buttonAdd = document.createElement("button");
-
-    const buttonAddToWish = document.createElement("button");
-
-    buttonAdd.textContent="Add To Cart";
-    buttonAdd.classList.add("AddTC");
-    buttonAdd.id = `btn-${product.id}` ////////////////////////////////////
-      
+      // productContainer.appendChild(productCard);
   
-
-    // Add To Cart Functionality
-    buttonAdd.addEventListener("click",(event)=>{
-      
-    
-
-      toggleCart(event.target.id,product);
-      
-    });
-
-
-    // Add To WishList
-    buttonAddToWish.textContent="Add To WishList";
-    buttonAddToWish.classList.add("AddTW");
-    // buttonAddToWish.setAttribute("data-type","wishlist")
-
-
-        buttonAddToWish.id=`btn-${product.id}`;  //card button and wish list button has same id 
-
-      // console.log(buttonAddToWish);
-    
-    
-    // Add To wishlist Functionality
-    buttonAddToWish.addEventListener("click",(event)=>{
-      
-    
-      toggleWishList(event.target.id,product)
-      
- 
-    })
-
-
-
-    
-      iconsDiv.append(buttonAdd)
-
-      iconsDiv.append(buttonAddToWish)
-
-    newDiv.appendChild(img);
-    newDiv.appendChild(titleDiv);
-
-
-    
-    newDiv.appendChild(iconsDiv);
-
     const e =  document.getElementById("second");
 
     if(direction===-1) {
       // console.log("scrollHe",e.scrollHeight);
       
-      const previousScrollHeight = e.scrollTop; // Store current scroll height
+      const previousScrollHeight = productContainer.scrollTop; // Store current scroll height
       //  console.log("prevScrollH",previousScrollHeight);
       
-    e.insertAdjacentElement("afterbegin",newDiv)
+    productContainer.insertAdjacentElement("afterbegin",productCard)
       //  console.log("AfterScrollH",e.scrollHeight);
        
-    e.scrollTop =  e.scrollHeight -previousScrollHeight +300;
+      productContainer.scrollTop =  productContainer.scrollHeight -previousScrollHeight +1000;
 
-    console.log(e.scrollTop);
+    console.log(productContainer.scrollTop);
     
     }
 
     else{
+
+      const previousScrollHeight = e.scrollTop; // Store current scroll height
+
+     
+      productContainer.append(productCard);
+      console.log(previousScrollHeight);
       
-
-      e.append(newDiv);
-
-      console.log("scrollTop is ", e.scrollTop);
+      // productContainer.scrollTop =  productContainer.scrollHeight - 3500 /////////
+// 
+      // console.log("scrollTop is ", e.scrollTop);
       
 
     }
 
+
+  // });
 }
 
+// Find Can be optimsed 
+// function displayProductOnUi(product,direction=0)   {
+
+//     const newDiv = document.createElement("div");
+//     const titleDiv = document.createElement('div');
+
+// // Add the p element using innerHTML
+//   titleDiv.innerHTML = `<p>${product.title} and id is ${product.id}</p>`;
+
+
+//     // newDiv.id = `${product.id}`;  -----------------------div and button inside div has same id 
+
+//     newDiv.className = "image-class";
+    
+//     const img = document.createElement("img");
+    
+//     img.src= product.thumbnail
+//     img.width = 150; // Set width (optional)
+//     img.height = 150;
+//     img.classList.add("product-images")
+
+    
+//     const iconsDiv = document.createElement("div");
+//     iconsDiv.id = "nav-icons-container"
+
+//     const buttonAdd = document.createElement("button");
+
+//     const buttonAddToWish = document.createElement("button");
+
+//     buttonAdd.textContent="Add To Cart";
+//     buttonAdd.classList.add("AddTC");
+//     buttonAdd.id = `btn-${product.id}` ////////////////////////////////////
+      
+  
+
+//     // Add To Cart Functionality
+//     buttonAdd.addEventListener("click",(event)=>{
+      
+    
+
+//       toggleCart(event.target.id,product);
+      
+//     });
+
+
+//     // Add To WishList
+//     buttonAddToWish.textContent="Add To WishList";
+//     buttonAddToWish.classList.add("AddTW");
+//     // buttonAddToWish.setAttribute("data-type","wishlist")
+
+
+//         buttonAddToWish.id=`btn-${product.id}`;  //card button and wish list button has same id 
+
+//       // console.log(buttonAddToWish);
+    
+    
+//     // Add To wishlist Functionality
+//     buttonAddToWish.addEventListener("click",(event)=>{
+      
+    
+//       toggleWishList(event.target.id,product)
+      
+ 
+//     })
+
+
+
+    
+//       iconsDiv.append(buttonAdd)
+
+//       iconsDiv.append(buttonAddToWish)
+
+//     newDiv.appendChild(img);
+//     newDiv.appendChild(titleDiv);
+
+
+    
+//     newDiv.appendChild(iconsDiv);
+
+//     const e =  document.getElementById("second");
+
+//     if(direction===-1) {
+//       // console.log("scrollHe",e.scrollHeight);
+      
+//       const previousScrollHeight = e.scrollTop; // Store current scroll height
+//       //  console.log("prevScrollH",previousScrollHeight);
+      
+//     e.insertAdjacentElement("afterbegin",newDiv)
+//       //  console.log("AfterScrollH",e.scrollHeight);
+       
+//     e.scrollTop =  e.scrollHeight -previousScrollHeight +300;
+
+//     console.log(e.scrollTop);
+    
+//     }
+
+//     else{
+      
+
+//       e.append(newDiv);
+
+//       console.log("scrollTop is ", e.scrollTop);
+      
+
+//     }
+
+// }
+
+function tgCart(event){
+  toggleCart(event.target.id,product);
+}
+
+function tgWishlist(event) {
+  toggleWishList(event.target.id,product)
+}
 
 // limit lagai h is function m 
 async function getProducts(limit,skip) {
@@ -432,7 +530,17 @@ async function categoryList(){
    const data = await res.json();
   //  console.log(data);
    
+  const element =  document.getElementById("categories");
+  const options = document.createElement("option");
+  options.value= "Choose Category";
+  options.textContent = "Choose Category";
+  options.disabled=true;
+  options.selected=true;
+  element.append(options);
 
+
+ element.append()
+     
    data.map((item)=>{
 
        const options = document.createElement("option");
@@ -459,6 +567,7 @@ categoryList();
 async function getSelectedValue() {
 
     const element =  document.getElementById("categories")
+
     // console.log(element.value);
 
     const res = await fetch(`https://dummyjson.com/products/category/${element.value}`)
@@ -606,22 +715,84 @@ function clearPrevPagination() {
   }
 }
 
+const observer = new IntersectionObserver((entries)=>{
+
+console.log("Enteries are ", entries);
+const cat = document.getElementById("categories");
+
+// if(cat.value!=="Choose Category") {
+// return;
+// }
+
+
+
+entries.forEach((entry)=>{
+  if(entry.isIntersecting){
+
+    console.log(entry.target.id/10);
+  const   pageToBeHighlighted  = Math.ceil((entry.target.id/10)/10);
+  highlightActive(pageToBeHighlighted);
+  // getProductByPagination(pageToBeHighlighted,0,0,1,0)
+  offset((pageToBeHighlighted-1)*10)
+  // if(pageToBeHighlighted===1) {
+    // }
+    const active = document.querySelector("button.active")
+    console.log(active);
+    if(active.id==1){
+    document.getElementById("prev").disabled = true;
+   
+  }
+  
+
+  }else{
+    // highlightActive()
+    
+  }
+
+})
+
+// console.log(entries[1])
+
+// if(entries[1].isIntersecting){
+//   console.log(entry.target.id/10);
+//     const   pageToBeHighlighted  = Math.ceil((entries[1].target.id/10)/10);
+//     highlightActive(pageToBeHighlighted)
+// }
+
+// if()
+
+},{
+  root:document.getElementById("second"),
+  threshold:0.5
+});
+
+
+
 // Function to fetch products based on the page number
-async function getProductByPagination(pageNumber , fromOnLoadEvent = 0, fromInfiniteScrolling=0, scrollingDirection=0) {
+async function getProductByPagination(pageNumber , fromOnLoadEvent = 0, fromInfiniteScrolling=0, scrollingDirection=0,fromObserver=0) {
    
     highlightActive(pageNumber); 
   const prevButton= document.getElementById("prev")
 
   const skipValue = (pageNumber - 1) * 10; // Assuming 10 products per page
-
-  const res = await fetch(`https://dummyjson.com/products?limit=10&skip=${skipValue}`);
-
-  const data = await res.json();
-
-  const products = data.products;
-
-  
-
+  let products
+  if(fromObserver === 0) {
+    
+    console.log("Inside Observer");
+    
+    const res = await fetch(`https://dummyjson.com/products?limit=10&skip=${skipValue}`);
+    
+    const data = await res.json();
+    
+    products = data.products;
+    
+    console.log(products);
+    mapOfItemsInfiniteScrolling.set(pageNumber,JSON.stringify(products))
+    
+    console.log(`Key is ${pageNumber}`,JSON.parse(mapOfItemsInfiniteScrolling.get(pageNumber)));
+  }
+   
+   
 if(fromInfiniteScrolling===1 && scrollingDirection ===1) {
   products.map((product)=>displayProductOnUi(product,1))
 }
@@ -655,6 +826,9 @@ else{
   // on 2 or 3 then click on 1 then it should run.
     if(pageNumber===1  && fromOnLoadEvent===1) {
       prevButton.disabled = true;
+      const e = document.getElementById('second');
+      e.scrollTop=0
+
     }
     else if(pageNumber===1){
       const nextButton = document.getElementById("next");
@@ -839,6 +1013,26 @@ else if(pageNumber!==1 && pageNumber<5) {
   highlightActive(pageNumber)
 
 
+
+
+//   const allProductCard = document.querySelectorAll(".product-card")
+//   console.log(allProductCard);
+  
+//   const arrayOfAllProductCard = Array.from(allProductCard)
+//   // mapOfItemsInfiniteScrolling.forEach((value,key)=>{
+//   //   // observer.observe(val)
+//   //   console.log(`key is ${key} and value is ${value}`);
+    
+//   // });
+//  arrayOfAllProductCard.forEach((productDiv)=>{
+//   console.log(productDiv);
+  
+//   observer.observe(productDiv);
+  
+
+//  })
+
+
 }
 
 offset(skipValue);
@@ -848,6 +1042,52 @@ offset(skipValue);
   
   getAllItemFromCart();
   getAllItemFromWishList()
+
+
+
+  
+  const allProductCard = document.querySelectorAll(".product-card")
+  console.log(allProductCard);
+  
+  const arrayOfAllProductCard = Array.from(allProductCard)
+  // mapOfItemsInfiniteScrolling.forEach((value,key)=>{
+  //   // observer.observe(val)
+  //   console.log(`key is ${key} and value is ${value}`);
+    
+  // });
+
+  mapOfItemsInfiniteScrolling.forEach((value,key)=>{
+    const ninenthELement= JSON.parse(value)[9];
+    const firstElement = JSON.parse(value)[0]
+    console.log(firstElement);
+    const idOfLastElement = Number(ninenthELement.id)*10;
+    const idOfFirstElement = Number(firstElement.id)*10;
+
+
+     const lastProductDiv = document.getElementById(`${idOfLastElement}`);
+
+     const firstProductDiv = document.getElementById(`${idOfFirstElement}`);
+
+     console.log(firstProductDiv);
+     
+    const categories = document.getElementById("categories");
+    if(categories.value!=="Choose Category") {
+     observer.disconnect()
+    }
+
+      observer.observe(firstProductDiv);
+      observer.observe(lastProductDiv);
+
+
+  })
+
+//  arrayOfAllProductCard.forEach((productDiv)=>{
+//   console.log(productDiv);
+  
+//   observer.observe(productDiv);
+  
+
+//  })
 
 }
 
@@ -1102,6 +1342,7 @@ let limit=0;
 
   const element = document.getElementById("second");
  const e =  document.getElementById(pageCount) ;
+ const categories =  document.getElementById("categories")
 
  let flag =0;
 //  console.log("inside infinite",e);
@@ -1113,8 +1354,10 @@ let limit=0;
   const activeButton = document.querySelector("button.active");
 
   // to toggle the visibilty of offset
-   const offsetDiv = document.querySelector('.offset')
+   const offsetDiv = document.querySelector('.offset');
+
    const { scrollTop, clientHeight, scrollHeight } = element;
+
    // Check if the scroll position is near the bottom to trigger loading new content
    if (scrollTop + clientHeight >= scrollHeight ) {
      console.log("Scrolled to bottom, loading more products...");
@@ -1122,6 +1365,13 @@ let limit=0;
       
     //  console.log(activeButton);
     //  console.log(activeButton.id);
+
+     console.log(categories.value);
+     if(categories.value!=="Choose Category") {
+    //  updatePaginationInCategory(1)
+     return
+     }
+     
      
      if(Number(activeButton.id)<10)
       { 

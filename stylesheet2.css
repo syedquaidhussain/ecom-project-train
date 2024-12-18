@@ -63,15 +63,29 @@
   }
   
   /* Product Container */
-  .product-container {
+  /* .product-container {
     max-width: 1200px;
     margin: 2rem auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     padding: 1rem;
-  }
+  } */
   
+  #second{
+    border: 4px solid #ff6347;
+    max-height: calc(100vh - 280px);
+    min-height: calc(100vh - 280px);
+    overflow: auto;
+    width: 60%;
+    margin-left: 17%;
+    /* max-width: 1200px; */
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+  }
   /* Product Card */
   .product-card {
     background: #fff;
